@@ -57,18 +57,29 @@ export default function TaskTrackerTest() {
     };
 
     const applyUpdate = async (id) => {
-        if (!updateTexts[id]) return;
+        if (!updateTexts[id]) return; // Skip if no update text is entered
         try {
-            const updatedTask = { ...tasks.find(task => task.id === id), update: updateTexts[id] };
+            // Find the task by id and update the comments field with the entered update text
+            const updatedTask = {
+                ...tasks.find(task => task.id === id),
+                comments: updateTexts[id] // Persist the update to the comments field
+            };
+
+            // Send the updated task to the backend
             await axios.put(`http://localhost:8081/api/v1/tasks/${id}`, updatedTask);
-            setTasks(tasks.map(task => task.id === id ? updatedTask : task));
+
+            // Update the task list in the state to reflect the change in comments
+            setTasks(tasks.map(task => task.id === id ? { ...task, comments: updateTexts[id] } : task));
+
             toast.success("Task updated successfully!");
+
+            // Clear the input field for the update text
             setUpdateTexts((prev) => ({ ...prev, [id]: "" }));
-            // eslint-disable-next-line no-unused-vars
         } catch (error) {
             toast.error("Failed to update task.");
         }
     };
+
 
     const deleteTask = async (id) => {
         try {
@@ -147,8 +158,14 @@ export default function TaskTrackerTest() {
                                 value={t.status}
                                 onChange={(e) => {
                                     const updatedStatus = e.target.value;
-                                    setTasks(tasks.map(task => task.id === t.id ? { ...task, status: updatedStatus } : task));
-                                    axios.put(`http://localhost:8081/api/v1/tasks/${t.id}`, { ...t, status: updatedStatus });
+                                    setTasks(tasks.map(task => task.id === t.id ? {
+                                        ...task,
+                                        status: updatedStatus
+                                    } : task));
+                                    axios.put(`http://localhost:8081/api/v1/tasks/${t.id}`, {
+                                        ...t,
+                                        status: updatedStatus
+                                    });
                                 }}
                             >
                                 <option value="PENDING">PENDING</option>
@@ -157,14 +174,15 @@ export default function TaskTrackerTest() {
                             </select>
                         </td>
                         <td>
-                            <p>{t.update || "No update available"}</p>
+                            <p>{t.comments || "No update available"}</p> {/* Display comments if available */}
                             <input
                                 placeholder="Provide update..."
                                 value={updateTexts[t.id] || ""}
-                                onChange={(e) => setUpdateTexts((prev) => ({ ...prev, [t.id]: e.target.value }))}
+                                onChange={(e) => setUpdateTexts((prev) => ({...prev, [t.id]: e.target.value}))}
                             />
                             <button onClick={() => applyUpdate(t.id)} className="update-btn">Update</button>
                         </td>
+
                         <td>
                             <button onClick={() => deleteTask(t.id)} className="delete-btn">Delete</button>
                         </td>
@@ -175,7 +193,8 @@ export default function TaskTrackerTest() {
 
             <h2>Expense Tracker</h2>
             <div className="card">
-                <input placeholder="Expense Title" value={expenseTitle} onChange={(e) => setExpenseTitle(e.target.value)} />
+                <input placeholder="Expense Title" value={expenseTitle}
+                       onChange={(e) => setExpenseTitle(e.target.value)}/>
                 <input placeholder="Amount" type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
                 <input placeholder="Category (Interiors, License, F&B, etc.)" value={category} onChange={(e) => setCategory(e.target.value)} />
                 <button onClick={addExpense}>Add Expense</button>
