@@ -15,12 +15,13 @@ export default function TaskTracker() {
     const [updateTexts, setUpdateTexts] = useState({});
 
     // Using process.env.REACT_APP_apiUrl for the base API URL
-    const apiUrl = '/api/v1/tasks';
+    const apiUrl = '/api/v1';
 
 
 
     const fetchTasks = async () => {
         try {
+            console.log(apiUrl)
             const response = await axios.get(`${apiUrl}/tasks`);
             setTasks(response.data);
             // eslint-disable-next-line no-unused-vars
