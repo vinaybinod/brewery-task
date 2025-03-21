@@ -14,7 +14,7 @@ export default function TaskTracker() {
     const [category, setCategory] = useState("");
     const [updateTexts, setUpdateTexts] = useState({});
 
-    // Using process.env.REACT_APP_apiUrl for the base API URL
+
     const apiUrl = 'http://23.21.173.183:8080/api/v1';
 
 
