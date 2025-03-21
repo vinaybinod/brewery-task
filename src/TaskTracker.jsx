@@ -15,7 +15,8 @@ export default function TaskTracker() {
     const [updateTexts, setUpdateTexts] = useState({});
 
     // Using process.env.REACT_APP_apiUrl for the base API URL
-    const apiUrl = import.meta.env.VITE_API_URL;
+    const apiUrl = '/api/v1/tasks';
+
 
 
     const fetchTasks = async () => {
