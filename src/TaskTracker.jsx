@@ -15,8 +15,7 @@ export default function TaskTracker() {
     const [updateTexts, setUpdateTexts] = useState({});
 
 
-    const apiUrl = 'http://23.21.173.183:8080/api/v1';
-
+    const apiUrl = import.meta.env.VITE_API_URL;
 
 
     const fetchTasks = async () => {
